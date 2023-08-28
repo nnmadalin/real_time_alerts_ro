@@ -1,4 +1,4 @@
-
+import { FaGithub, FaInstagram, FaFacebook, FaSearch} from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import SvgComponent from './svgcomponent';
@@ -10,35 +10,23 @@ export const get_judet = (id) => {
   window.location.replace(currentUrl);
 };
 
+
+
 function App() {
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const api_call = async () => {
-    var url = "https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/";
-
-    (async () => {
-      try {
-        const response = await fetch(url);
-        const parsed = await response.json();
-        console.log(parsed);
-      } catch (error) {
-        console.log("API error: " + error)
-      }
-    })();
-  };
-
-
   useEffect(() => {
-
-  })
-
+    console.log();
+  });
   return (
     <>
-      <div className='container'>
+      <div className={`container${window.location.pathname.length > 1 ? ' containerhidden' : ''}`} >
         <div className='title'>
           <h1>Alerte Meteo - România</h1>
           <h3>Neaună Mădălin</h3>
-          <div className='social'></div>
+          <div className='social'>
+            <a href='https://github.com/nnmadalin' target={"_blank"}><FaGithub /></a>
+            <a href='https://www.instagram.com/nnmadalin/' target={"_blank"}><FaInstagram /></a>
+            <a href='https://www.facebook.com/madalin.neauna' target={"_blank"}><FaFacebook /></a>
+          </div>
         </div>
         <div className='contain'>
           <SvgComponent />

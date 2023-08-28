@@ -1,3 +1,22 @@
+.containerhidden{
+   overflow: hidden;
+}
+.loading{
+   width: 100%;
+   height: 100vh;
+   position: absolute;
+   top: 0;
+   left: 0;
+   background-color: rgba(0, 0, 0, 0.9);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: all 1s;
+}
+.loading img{
+   width: 100px;
+   height: 100px;
+}
 .cardInfo{
    width: 100%;
    height: 100vh;
@@ -10,33 +29,41 @@
    justify-content: center;
    height: auto;
    min-height: 100%;
-   transition: opacity 0.3s ease-in-out;
+   transition: all 1s;
+}
+.cardInfo *{
+   transition: all 0.3s;
 }
 .cardInfo .card{
+   display: flex;
+   flex-direction: column;
    width: 1000px;
    max-width: 90%;
-   height: 600px;
+   padding-bottom: 50px;
    border-radius: 20px;
    background-color: #0A4D68;
+   transition: all 1s;
 }
 .cardInfo .card .top{
    width: calc(100% - 40px);
    display: flex;
    align-items:center;
-   justify-content:space-between;
-   padding: 20px;
+   justify-content: space-between;
+   padding: 20px 20px;
+   flex: 0 0 auto;
+   position: relative;
 }
 .cardInfo .card .top h1{
    color: white;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   text-align: center;
+   flex: 1;
+   font-size: 40px;
 }
 .cardInfo .card .top button{
    display: flex;
    align-items: center;
    justify-content: center;
-   padding: 15px;
-   width: 50px;
-   height: 50px;
    text-align: center;
    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
    font-weight: bold;
@@ -45,4 +72,35 @@
    border: none;
    color: white;
    cursor: pointer;
+   transition: all 0.5s;
+}
+.cardInfo .card .top button:hover{
+   scale: 1.2;
+}
+.cardInfo .card .scroll{
+   flex: 1;
+   padding: 15px;
+   overflow: auto;
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+.cardInfo .card .scroll .infoalert{
+   background-color: #0a2a36;
+   color:white;
+   padding: 20px;
+   border-radius: 10px;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   font-size: 17px;
+   gap: 25px;
+}
+.cardInfo .card .scroll .infoalert .group{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 30px;
+   flex-wrap: wrap;
 }

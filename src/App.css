@@ -5,6 +5,7 @@
   align-items: center;
   flex-direction: column;
   gap: 20px;
+  overflow: auto;
 }
 .title{
   text-align: center;
@@ -14,6 +15,27 @@
 }
 .title h1{
   font-size: 40px;
+}
+.title .social{
+  margin-top: 10px;;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 22px;
+}
+.title a{
+  text-decoration: none;
+  color: black;
+}
+.title .social a{
+  transition: all 0.3s;
+}
+.title .social a:hover{
+  transform: scale(1.1);
+}
+.title *{
+  margin: 0px;
 }
 
 .contain{
@@ -31,6 +53,45 @@
 
 svg a{
   cursor: pointer;
+}
+@media only screen and (max-height: 900px){
+  .map{
+    scale: 1.4;
+  }
+}
+@media only screen and (max-height: 750px){
+  .map{
+    scale: 1.2;
+  }
+}
+@media only screen and (max-height: 650px){
+  .map{
+    scale: 1.0;
+  }
+  .map{
+    position: relative;
+    top: -30px;
+  }
+}
+
+@media only screen and (max-height: 600px){
+  .map{
+    scale: 0.9;
+    position: relative;
+    top: -50px;
+  }
+  .container{
+    gap: 0px;
+  }
+}
+@media only screen and (max-height: 550px){
+  .map{
+    scale: 0.7;
+  }
+  .contain{
+    gap: 0px;
+    height: 500px;
+  }
 }
 @media only screen and (max-width: 1000px) {
   .map{
@@ -53,13 +114,13 @@ svg a{
     scale: 0.8;
   }
   .container{
-    gap: 50px;
+    gap: 60px;
   }
 }
 
 @media only screen and (max-width: 938px) {
   .contain{
-    gap: 40px;
+    gap: 60px;
   }
   .contain button{
     width: 250px;
