@@ -5,6 +5,7 @@ import './info_county.css';
 function InfoCounty() {
 
    const [loading, setLoading] = useState(true);
+   const [apicall, setapicall] = useState(true);
 
    const [transmission, Settransmission] = useState('undefined');
    const [reception, Setreception] = useState('undefined');
@@ -49,49 +50,54 @@ function InfoCounty() {
    }
 
    const api_call = async () => {
-      var url = "http://127.0.0.1:8080" + "/api/" + options[options_shortcut.indexOf(window.location.pathname.substring(1))];
-      //var url = window.location.origin + "/api/" + options[options_shortcut.indexOf(window.location.pathname.substring(1))];
+      if(apicall == true){
+         setapicall(false);
+         var url = "http://127.0.0.1:8080" + "/api/county/" + options[options_shortcut.indexOf(window.location.pathname.substring(1))];
+         //var url = window.location.origin + "/api/" + options[options_shortcut.indexOf(window.location.pathname.substring(1))];
 
-      const dataToSend = {
-         api_token: process.env.REACT_APP_API_KEY
-      };
+         const dataToSend = {
+            api_token: process.env.REACT_APP_API_KEY
+         };
+         console.log("Dsadsa");
+         (async () => {
+            try {
+               const response = await fetch(url, {
+                  method: 'POST',
+                  headers: {
+                     'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(dataToSend)
+               });
 
-      (async () => {
-         try {
-            const response = await fetch(url, {
-               method: 'POST',
-               headers: {
-                  'Content-Type': 'application/json'
-               },
-               body: JSON.stringify(dataToSend)
-            });
+               if (!response.ok) {
+                  console.log("API reponse status code: " + response.status);
+               }
+               else {
+                  const parsed = await response.json();
+                  Settransmission(parsed.senderName);
+                  Setreception(convertToLocalTime(parsed.onset));
+                  Setexpiry(convertToLocalTime(parsed.expires));
+                  if(convertToLocalTime(parsed.expires) < new Date() && convertToLocalTime(parsed.onset) >= new Date())
+                     Setstatus("Expired");
+                  else if(convertToLocalTime(parsed.onset) >= new Date())
+                     Setstatus("Ongoing");
+                  else
+                  Setstatus("Future");
+                  Setcertainty(parsed.certainty);
+                  Setseverity(parsed.severity);
+                  Setdescription(parsed.headline);
 
-            if (!response.ok) {
-               console.log("API reponse status code: " + response.status);
+                  var color = (parsed.awareness_level); color = color.split(";");
+                  Setcolor(color[1]);
+               }
+
+            } catch (error) {
+               console.log("API error: " + error)
+               window.location.replace(window.location.origin);
+               alert("Ceva nu a mers bine cu API");
             }
-            else {
-               const parsed = await response.json();
-               Settransmission(parsed.senderName);
-               Setreception(convertToLocalTime(parsed.onset));
-               Setexpiry(convertToLocalTime(parsed.expires));
-               if(convertToLocalTime(parsed.expires) < new Date() && convertToLocalTime(parsed.onset) >= new Date())
-                  Setstatus("Expired");
-               else if(convertToLocalTime(parsed.onset) >= new Date())
-                  Setstatus("Ongoing");
-               else
-               Setstatus("Future");
-               Setcertainty(parsed.certainty);
-               Setseverity(parsed.severity);
-               Setdescription(parsed.headline);
-
-               var color = (parsed.awareness_level); color = color.split(";");
-               Setcolor(color[1]);
-            }
-
-         } catch (error) {
-            console.log("API error: " + error)
-         }
-      })();
+         })();
+      }
    };
 
    useEffect(() => {
@@ -99,9 +105,10 @@ function InfoCounty() {
          window.location.replace(window.location.origin);
       api_call();
       setTimeout(() => {
-         setLoading(false); // După un interval de timp, setăm starea la false pentru a opri încărcarea
+          // După un interval de timp, setăm starea la false pentru a opri încărcarea
+         setLoading(false);
       }, 2000);
-   })
+   }, [api_call]);
 
    const divStyle = {
       border: `3px solid ${color}` // Stilul pentru border cu culoarea din variabilă
