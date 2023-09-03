@@ -1,7 +1,8 @@
 import { FaGithub, FaInstagram, FaFacebook, FaSearch } from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import SvgComponent from './svgcomponent';
+import { useCollapse } from 'react-collapsed';
+
 
 
 export const get_judet = (id) => {
@@ -9,6 +10,29 @@ export const get_judet = (id) => {
   currentUrl += "/" + id;
   window.location.replace(currentUrl);
 };
+
+function Collapsible({ json, index }) {
+  json = JSON.parse(json);
+  const config = {
+      duration: 500
+  };
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse(config);
+return (
+  <div className="card_alert">
+      <div className="header" {...getToggleProps()}>
+        <b>
+        {json[index]["sent"]}
+        </b>
+      </div>
+      <div {...getCollapseProps()}>
+          <div className="content">
+              Now you can see the hidden content. <br/><br/>
+              Click again to hide...
+          </div>
+      </div>
+  </div>
+  );
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -80,35 +104,33 @@ function App() {
   };
 
   useEffect(() => {
-    if (window.location.pathname == "/")
-      api_call();
-    else
-      setLoading(false);
-      
+
   })
 
   return (
     <>
-      {loading ? (
-        <div className="loading">
-            <img src='./02-45-27-186_512.webp'></img>
-        </div>
-      ) : (
-        <div className={`container${window.location.pathname.length > 1 ? ' containerhidden' : ''}`} >
-          <div className='title'>
-            <h1>Alerte Meteo - România</h1>
-            <h3>Neaună Mădălin</h3>
-            <div className='social'>
-              <a href='https://github.com/nnmadalin' target={"_blank"}><FaGithub /></a>
-              <a href='https://www.instagram.com/nnmadalin/' target={"_blank"}><FaInstagram /></a>
-              <a href='https://www.facebook.com/madalin.neauna' target={"_blank"}><FaFacebook /></a>
-            </div>
-          </div>
-          <div className='contain'>
-            <SvgComponent />
+      <div className='container' >
+        <div className='title'>
+          <img src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/White_alert_icon.svg/1200px-White_alert_icon.svg.png' alt='alert-icon' />
+          <h1>Alerte Meteo - România</h1>
+          <br />
+          <h3>Neaună Mădălin</h3>
+          <div className='social'>
+            <a href='https://github.com/nnmadalin' target={"_blank"}><FaGithub /></a>
+            <a href='https://www.instagram.com/nnmadalin/' target={"_blank"}><FaInstagram /></a>
+            <a href='https://www.facebook.com/madalin.neauna' target={"_blank"}><FaFacebook /></a>
           </div>
         </div>
-      )}
+        <div className='contain'>
+          <div className="search">
+            <input type='text' placeholder="Caută după județ!"/>
+            <button>Abonare</button>
+          </div>
+          <div className="alerts">
+            <Collapsible json='{"0":{"certainty":"Likely","county":["Alba","Arad","Argeș","Bacău","Bihor","Bistrița-Năsăud","Botoșani","Brașov","Buzău","Caraș-Severin","Cluj","Covasna","Dâmbovița","Gorj","Harghita","Hunedoara","Iași","Maramureș","Mehedinți","Mureș","Neamț","Prahova","Satu Mare","Sălaj","Sibiu","Suceava","Timiș","Vaslui","Vâlcea","Vrancea"],"description":"Vor fi averse și cu caracter torențial, descărcări electrice, intensificări ale vântului (în general cu rafale de 55...70 km/h), pe arii restrânse vijelii și grindină. În intervale scurte de timp sau prin acumulare cantitățile de apă vor fi de 20...25 l/mp și izolat peste 40 l/mp.","effective":"2023-09-03T09:40:00+03:00","expires":"2023-09-04T06:00:00+03:00","onset":"2023-09-03T10:00:00+03:00","senderName":"Administrația Națională de Meteorologie","sent":"2023-09-03T10:01:15+03:00","severity":"Moderate"}}' index={0}/>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

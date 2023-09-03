@@ -1,5 +1,5 @@
 html, head{
-  background-color: #0A4D68;
+  background-color: #1C1C1E;
 }
 *{
   margin: 0;
@@ -19,5 +19,5 @@ body {
 #root {
   width: 100vw;
   height: 100vh;
-  background-color: #0A4D68;
+  background-color: #1C1C1E;
 }
