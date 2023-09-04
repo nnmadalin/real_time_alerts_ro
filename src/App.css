@@ -121,6 +121,7 @@
   align-items: center;
   flex-wrap: wrap;
   flex-direction: column;
+  gap: 50px;
 }
 .contain .alerts .card_alert{
   width: calc(950px - 50px);
@@ -155,4 +156,7 @@
 .contain .alerts .card_alert .header{
   padding: 20px 30px;
   cursor: pointer;
+}
+img{
+  width: 250px;
 }

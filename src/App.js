@@ -110,13 +110,14 @@ function App() {
           </div>
           <div className="alerts">
             {loading ? (
-              // Afișați un mesaj de încărcare până când datele sunt disponibile
-              <p>Loading...</p>
+              <img src='/output-onlinegiftools.gif' />
             ) :(
               Object.keys(jsondata).map((key) => {
                 const item = jsondata[key];
                 return (
-                  <Collapsible json={item} />
+                  <>
+                    <Collapsible json={item} />
+                  </>
                 );
               })
             )
