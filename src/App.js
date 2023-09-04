@@ -3,12 +3,6 @@ import React, { useState, useEffect, useRef} from 'react';
 import './App.css';
 import { useCollapse } from 'react-collapsed';
 
-export const get_judet = (id) => {
-  var currentUrl = window.location.origin;
-  currentUrl += "/" + id;
-  window.location.replace(currentUrl);
-};
-
 function Collapsible({ json }) {
   const config = {
     duration: 500
@@ -65,6 +59,8 @@ function Collapsible({ json }) {
 function App() {
   const [jsondata, setJsonData] = useState(undefined);
   const [loading, setLoading] = useState(true); 
+  const [searchCounty, setSearchCounty] = useState('');
+  const [filteredJsonData, setFilteredJsonData] = useState([]);
 
   function api_call() {
     var url = "https://api.nnmadalin.me/ampr/";
@@ -88,6 +84,38 @@ function App() {
     api_call();
   }, []);
 
+  useEffect(() => {
+    const isSearchEmpty = searchCounty.trim() === "";
+
+    const new_searchCounty = searchCounty.toLocaleLowerCase()
+      .replace(/ă/g, 'a')
+      .replace(/î/g, 'i')
+      .replace(/â/g, 'a')
+      .replace(/ș/g, 's')
+      .replace(/ț/g, 's')
+      ;
+
+    if (jsondata) {
+      if (!isSearchEmpty) {
+        const filteredData = Object.values(jsondata).filter(item => {
+          return item.county.some(county => {
+            const normalizedCounty = county
+              .replace(/ă/g, 'a')
+              .replace(/î/g, 'i')
+              .replace(/â/g, 'a')
+              .replace(/ș/g, 's')
+              .replace(/ț/g, 's')
+              ;
+      
+            return normalizedCounty.toLocaleLowerCase().includes(new_searchCounty);
+          });
+        });
+        setFilteredJsonData(filteredData);
+      } else {
+        setFilteredJsonData(Object.values(jsondata));
+      }
+    }
+  }, [searchCounty, jsondata]);
 
   return (
     <>
@@ -105,23 +133,18 @@ function App() {
         </div>
         <div className='contain'>
           <div className="search">
-            <input type='text' placeholder="Caută după județ!"/>
+            <input type='text' placeholder="Caută după județ!" value={searchCounty} onChange={(e) => setSearchCounty(e.target.value)}/>
             <button>Abonare</button>
           </div>
           <div className="alerts">
             {loading ? (
               <img src='/output-onlinegiftools.gif' />
-            ) :(
-              Object.keys(jsondata).map((key) => {
-                const item = jsondata[key];
-                return (
-                  <>
-                    <Collapsible json={item} />
-                  </>
-                );
-              })
-            )
-            }
+            ) : (
+              // Folosiți filteredJsonData pentru a afișa doar datele filtrate
+              filteredJsonData.map((item, key) => (
+                <Collapsible key={key} json={item} />
+              ))
+            )}
           </div>
         </div>
       </div>
