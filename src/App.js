@@ -1,9 +1,7 @@
-import { FaGithub, FaInstagram, FaFacebook, FaSearch } from "react-icons/fa";
-import React, { useState, useEffect } from 'react';
+import { FaGithub, FaInstagram, FaFacebook, FaCalendarAlt } from "react-icons/fa";
+import React, { useState, useEffect, useRef} from 'react';
 import './App.css';
 import { useCollapse } from 'react-collapsed';
-
-
 
 export const get_judet = (id) => {
   var currentUrl = window.location.origin;
@@ -11,107 +9,91 @@ export const get_judet = (id) => {
   window.location.replace(currentUrl);
 };
 
-function Collapsible({ json, index }) {
-  json = JSON.parse(json);
+function Collapsible({ json }) {
   const config = {
-      duration: 500
+    duration: 500
   };
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse(config);
-return (
-  <div className="card_alert">
+  return (
+    <div className="card_alert">
       <div className="header" {...getToggleProps()}>
         <b>
-        {json[index]["sent"]}
+          <FaCalendarAlt /> Dată primire: 
+          { "   " + (new Date(json["sent"])).toLocaleDateString('ro-RO') + " " + (new Date(json["sent"])).toLocaleTimeString('ro-RO')}
         </b>
       </div>
       <div {...getCollapseProps()}>
-          <div className="content">
-              Now you can see the hidden content. <br/><br/>
-              Click again to hide...
+        <div className="content">
+          <div className="row">
+            <b>Severitate: <span>{json["severity"]}</span></b>
           </div>
+          <div className="row">
+            <b>Certitudine: <span>{json["certainty"]}</span></b>
+          </div>
+          <div className="row">
+            <b>Alertă în vigoare;</b>
+            <p>De la: <span>{(new Date(json["onset"])).toLocaleDateString('ro-RO') + " " + (new Date(json["onset"])).toLocaleTimeString('ro-RO')}</span> până la: <span>{(new Date(json["expires"])).toLocaleTimeString('ro-RO') + " " + (new Date(json["expires"])).toLocaleTimeString('ro-RO')}</span></p>
+          </div>
+          <div className="row">
+            <b>Debutul evenimentului meteorologic:</b>
+            <p><span>{(new Date(json["effective"])).toLocaleDateString('ro-RO') + " " + (new Date(json["effective"])).toLocaleTimeString('ro-RO')}</span></p>
+          </div>
+          <div className="row">
+            <b>Descriere:</b>
+            <p><span>{json["description"]}</span></p>
+          </div>
+          <div className="row">
+            <b>Zone afectate:</b>
+            <p>
+              {json["county"].map((item, index) => (
+                <span key={index}>
+                  {item}{index < json["county"].length - 1 && ", "}
+                </span>
+              ))}  
+            </p>
+          </div>
+          <div className="row">
+            <b>Emis de:</b>
+            <p><span>{json["senderName"]}</span></p>
+          </div>
+        </div>
       </div>
-  </div>
+    </div>
   );
 }
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [error_api, seterror] = useState(false);
-  const [apicall, setapicall] = useState(true);
+  const [jsondata, setJsonData] = useState(undefined);
+  const [loading, setLoading] = useState(true); 
 
-  const county = [
-    "Alba", "Arad", "Argeș", "Bacău", "Bihor", "Bistrița-Năsăud", "Botoșani",
-    "Brăila", "Brașov", "București", "Buzău", "Călărași", "Caraș-Severin",
-    "Cluj", "Constanța", "Covasna", "Dâmbovița", "Dolj", "Galați", "Giurgiu",
-    "Gorj", "Harghita", "Hunedoara", "Ialomița", "Iași", "Ilfov", "Maramureș",
-    "Mehedinți", "Mureș", "Neamț", "Olt", "Prahova", "Sălaj", "Satu Mare",
-    "Sibiu", "Suceava", "Teleorman", "Timiș", "Tulcea", "Vâlcea", "Vaslui", "Vrancea"
-  ];
-
-  const api_call = async () => {
-    if(apicall == true){
-      setapicall(false);
-      const totalCount = county.length; 
-      let completedCount = 0; 
-      try{
-        for (const element of county) {
-          var url = "http://127.0.0.1:8080" + "/api/county/" + element;
-          //var url = window.location.origin + "/api/" + options[options_shortcut.indexOf(window.location.pathname.substring(1))];
-
-          const dataToSend = {
-            api_token: process.env.REACT_APP_API_KEY
-          };
-          (async () => {
-            try {
-              const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dataToSend)
-              });
-
-              if (!response.ok) {
-                console.log("API reponse status code: " + response.status);
-              }
-              else {
-                const parsed = await response.json();
-                if(parsed == null)
-                  console.log("aici");
-                console.log(parsed);
-              }
-              completedCount++; 
-              if (completedCount === totalCount) {
-                setLoading(false); 
-              }
-            } catch (error) {
-              console.log("API error1: " + error);
-              setLoading(false);
-              seterror(true);
-            }
-          })();
-        };
-        
-      }
-      catch(error){
-        console.log("API error: " + error);
-        setLoading(false); 
-        alert("Ceva nu a mers bine cu API");
-      }
-    }
-    if(error_api == true)
-      alert("Ceva nu a mers bine cu API");
-  };
+  function api_call() {
+    var url = "https://api.nnmadalin.me/ampr/";
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setJsonData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Fetch error:', error);
+      });
+  }
 
   useEffect(() => {
+    api_call();
+  }, []);
 
-  })
 
   return (
     <>
       <div className='container' >
         <div className='title'>
-          <img src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/White_alert_icon.svg/1200px-White_alert_icon.svg.png' alt='alert-icon' />
+          <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/White_alert_icon.svg/1200px-White_alert_icon.svg.png' alt='alert-icon' />
           <h1>Alerte Meteo - România</h1>
           <br />
           <h3>Neaună Mădălin</h3>
@@ -127,7 +109,18 @@ function App() {
             <button>Abonare</button>
           </div>
           <div className="alerts">
-            <Collapsible json='{"0":{"certainty":"Likely","county":["Alba","Arad","Argeș","Bacău","Bihor","Bistrița-Năsăud","Botoșani","Brașov","Buzău","Caraș-Severin","Cluj","Covasna","Dâmbovița","Gorj","Harghita","Hunedoara","Iași","Maramureș","Mehedinți","Mureș","Neamț","Prahova","Satu Mare","Sălaj","Sibiu","Suceava","Timiș","Vaslui","Vâlcea","Vrancea"],"description":"Vor fi averse și cu caracter torențial, descărcări electrice, intensificări ale vântului (în general cu rafale de 55...70 km/h), pe arii restrânse vijelii și grindină. În intervale scurte de timp sau prin acumulare cantitățile de apă vor fi de 20...25 l/mp și izolat peste 40 l/mp.","effective":"2023-09-03T09:40:00+03:00","expires":"2023-09-04T06:00:00+03:00","onset":"2023-09-03T10:00:00+03:00","senderName":"Administrația Națională de Meteorologie","sent":"2023-09-03T10:01:15+03:00","severity":"Moderate"}}' index={0}/>
+            {loading ? (
+              // Afișați un mesaj de încărcare până când datele sunt disponibile
+              <p>Loading...</p>
+            ) :(
+              Object.keys(jsondata).map((key) => {
+                const item = jsondata[key];
+                return (
+                  <Collapsible json={item} />
+                );
+              })
+            )
+            }
           </div>
         </div>
       </div>
