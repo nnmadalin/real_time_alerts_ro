@@ -26,7 +26,7 @@ function Collapsible({ json }) {
           </div>
           <div className="row">
             <b>Alertă în vigoare;</b>
-            <p>De la: <span>{(new Date(json["onset"])).toLocaleDateString('ro-RO') + " " + (new Date(json["onset"])).toLocaleTimeString('ro-RO')}</span> până la: <span>{(new Date(json["expires"])).toLocaleTimeString('ro-RO') + " " + (new Date(json["expires"])).toLocaleTimeString('ro-RO')}</span></p>
+            <p>De la: <span>{(new Date(json["onset"])).toLocaleDateString('ro-RO') + " " + (new Date(json["onset"])).toLocaleTimeString('ro-RO')}</span> până la: <span>{(new Date(json["expires"])).toLocaleDateString('ro-RO') + " " + (new Date(json["expires"])).toLocaleTimeString('ro-RO')}</span></p>
           </div>
           <div className="row">
             <b>Debutul evenimentului meteorologic:</b>
@@ -141,7 +141,7 @@ function App() {
               <img src='/output-onlinegiftools.gif' />
             ) : (
               // Folosiți filteredJsonData pentru a afișa doar datele filtrate
-              filteredJsonData.map((item, key) => (
+              filteredJsonData.reverse().map((item, key) => (
                 <Collapsible key={key} json={item} />
               ))
             )}
