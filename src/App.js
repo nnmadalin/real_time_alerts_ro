@@ -2,6 +2,8 @@ import { FaGithub, FaInstagram, FaFacebook, FaCalendarAlt } from "react-icons/fa
 import React, { useState, useEffect, useRef} from 'react';
 import './App.css';
 import { useCollapse } from 'react-collapsed';
+import subscribeToTopic from './firebase.js';
+import judeteRomania from './county.js';
 
 function Collapsible({ json }) {
   const config = {
@@ -61,6 +63,7 @@ function App() {
   const [loading, setLoading] = useState(true); 
   const [searchCounty, setSearchCounty] = useState('');
   const [filteredJsonData, setFilteredJsonData] = useState([]);
+  const [judetSelectat, setJudetSelectat] = useState('Alba');
 
   function api_call() {
     var url = "https://api.nnmadalin.me/ampr/";
@@ -78,6 +81,10 @@ function App() {
       .catch(error => {
         console.error('Fetch error:', error);
       });
+  }
+
+  const handleSelectChange = (event) => {
+    setJudetSelectat(event.target.value);
   }
 
   useEffect(() => {
@@ -117,6 +124,10 @@ function App() {
     }
   }, [searchCounty, jsondata]);
 
+  function subscribenews(){
+      subscribeToTopic("ampr_" + judetSelectat);
+  }
+
   return (
     <>
       <div className='container' >
@@ -134,7 +145,16 @@ function App() {
         <div className='contain'>
           <div className="search">
             <input type='text' placeholder="Caută după județ!" value={searchCounty} onChange={(e) => setSearchCounty(e.target.value)}/>
-            <button>Abonare</button>
+            <div className="subscribe">
+              <div className="select">
+                <select onChange={handleSelectChange}>
+                  {judeteRomania.map((judet, index) => (
+                    <option key={index} value={judet.prescurtare}>{judet.nume}</option>
+                  ))}
+                </select>
+              </div>
+              <button onClick={subscribenews}>Abonare</button> 
+            </div>
           </div>
           <div className="alerts">
             {loading ? (
