@@ -21,7 +21,7 @@ async function subscribeToTopic(topic) {
    fetch(`https://iid.googleapis.com/iid/v1/${token}/rel/topics/${topic}`, {
       method: 'POST',
       headers: {
-         Authorization: `key=${process.env.REACT_APP_FIREBASE_SECRET_KEY}`,
+         Authorization: `key=` + process.env.REACT_APP_FIREBASE_SECRET_KEY,
       },
    })
       .then(response => {
