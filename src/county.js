@@ -1,4 +1,5 @@
 const judeteRomania = [
+   { prescurtare: "TOATE", nume: "Toate Judetele" },
    { prescurtare: "AB", nume: "Alba" },
    { prescurtare: "AR", nume: "Arad" },
    { prescurtare: "AG", nume: "Argeș" },
@@ -40,5 +41,5 @@ const judeteRomania = [
    { prescurtare: "VL", nume: "Vaslui" },
    { prescurtare: "VN", nume: "Vrancea" }
 ];
- 
+
 export default judeteRomania;

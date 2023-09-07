@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken, onMessage} from 'firebase/messaging';
+import { getMessaging, getToken, } from 'firebase/messaging';
 import Cookies from 'js-cookie'
 
 const firebaseConfig = {
@@ -19,21 +19,50 @@ async function subscribeToTopic(topic) {
    const token = await requestPermission();
 
    fetch(`https://iid.googleapis.com/iid/v1/${token}/rel/topics/${topic}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-         Authorization: `key=${process.env.REACT_APP_FIREBASE_SECRET_KEY}`, 
+         Authorization: `key=${process.env.REACT_APP_FIREBASE_SECRET_KEY}`,
       },
    })
-   .then(response => {
-      if (response.ok) {
-         console.log(`Subscribed to topic: ${topic}`);
-      } else {
-         console.error(`Error subscribing to topic`);
-      }
+      .then(response => {
+         if (response.ok) {
+            console.log(`Subscribed to topic: ${topic}`);
+            alert("Te-ai abonat cu succes!");
+         } else {
+            console.error(`Error subscribing to topic`);
+            alert("Ceva nu a functionat bine! Verifica logs!");
+         }
+      })
+      .catch(error => {
+         console.error(error);
+         alert("Ceva nu a functionat bine! Verifica logs!");
+      });
+}
+
+async function unsubscribe(topic) {
+
+   const token = await requestPermission();
+
+   fetch(`https://iid.googleapis.com/iid/v1/${token}/rel/topics/${topic}`, {
+      method: 'DELETE',
+      headers: {
+         Authorization: `key=${process.env.REACT_APP_FIREBASE_SECRET_KEY}`,
+      },
    })
-   .catch(error => {
-      console.error(error);
-   });
+      .then(response => {
+         if (response.ok) {
+            console.log(`Unsubscribed to topic: ${topic}`);
+            alert("Te-ai dezabonat cu succes!");
+         } else {
+            console.error(`Error unsubscribing to topic`);
+            alert("Ceva nu a functionat bine! Verifica logs!");
+         }
+      })
+      .catch(error => {
+         console.error(error);
+         alert("Ceva nu a functionat bine! Verifica logs!");
+      });
+
 }
 
 async function requestPermission() {
@@ -50,7 +79,7 @@ async function requestPermission() {
             }).then((currentToken) => {
                if (currentToken) {
                   console.log("firebase key detect");
-                  resolve(currentToken); 
+                  resolve(currentToken);
                } else {
                   console.log("firebase no key")
                   resolve("");
@@ -64,4 +93,4 @@ async function requestPermission() {
    });
 }
 
-export default subscribeToTopic;
+export { subscribeToTopic, unsubscribe };

@@ -2,7 +2,7 @@ import { FaGithub, FaInstagram, FaFacebook, FaCalendarAlt } from "react-icons/fa
 import React, { useState, useEffect, useRef} from 'react';
 import './App.css';
 import { useCollapse } from 'react-collapsed';
-import subscribeToTopic from './firebase.js';
+import {subscribeToTopic, unsubscribe} from './firebase.js';
 import judeteRomania from './county.js';
 
 function Collapsible({ json }) {
@@ -63,7 +63,7 @@ function App() {
   const [loading, setLoading] = useState(true); 
   const [searchCounty, setSearchCounty] = useState('');
   const [filteredJsonData, setFilteredJsonData] = useState([]);
-  const [judetSelectat, setJudetSelectat] = useState('Alba');
+  const [judetSelectat, setJudetSelectat] = useState('TOATE');
 
   function api_call() {
     var url = "https://api.nnmadalin.me/ampr/";
@@ -125,7 +125,13 @@ function App() {
   }, [searchCounty, jsondata]);
 
   function subscribenews(){
-      subscribeToTopic("ampr_" + judetSelectat);
+    subscribeToTopic("ampr_" + judetSelectat)
+  }
+
+  function unsubribed(){
+    if(window.confirm("Esti sigur ca vrei sa te dezabonezi de la judetul: " + judetSelectat + "?") == true ){
+      unsubscribe("ampr_" +judetSelectat)
+    }
   }
 
   return (
@@ -154,6 +160,7 @@ function App() {
                 </select>
               </div>
               <button onClick={subscribenews}>Abonare</button> 
+              <button onClick={unsubribed}>Dezabonare</button> 
             </div>
           </div>
           <div className="alerts">

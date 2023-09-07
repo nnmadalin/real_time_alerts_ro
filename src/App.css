@@ -119,7 +119,7 @@ select::-ms-expand {
 .select {
   position: relative;
   display: flex;
-  width: 590px;
+  width: 410px;
   max-width: 90%;
   height: 3em;
   border-radius: .25em;
