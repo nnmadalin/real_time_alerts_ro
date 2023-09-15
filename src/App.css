@@ -221,3 +221,21 @@ select::-ms-expand {
 img{
   width: 250px;
 }
+.disclaimer{
+  width: 800px;
+  max-width: 95%;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+.disclaimer hr{
+  margin: 0px 20px;
+  margin-bottom: 10px;  
+}
+.disclaimer p{
+  padding: 0px 20px;
+}
+.disclaimer a{
+  color: #9b9a9a;
+}

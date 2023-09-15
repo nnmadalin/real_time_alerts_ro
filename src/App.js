@@ -174,6 +174,12 @@ function App() {
             )}
           </div>
         </div>
+        <div className="disclaimer">
+          <hr />
+          <p>All data provided by our website are first passed through our api (
+            <a href="https://api.nnmadalin.me/ampr" target={"_blank"}>api.nnmadalin.me/ampr</a>).<br /> These are taken from the feed of the site ~
+            <a href="https://meteoalarm.org/en/live/" target={"_blank"}>meteoalarm.org</a>~.</p>
+        </div>
       </div>
     </>
   );
